@@ -1,0 +1,252 @@
+/* LinkedIn AI Post Detector - Content Script Styles */
+
+/* ─── Badge ──────────────────────────────────────────────────────────────── */
+
+.ai-detector-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #fff;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+  z-index: 10;
+  margin: 8px 0 4px 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  line-height: 1;
+  outline: none;
+  animation: ai-detector-badge-enter 0.3s ease-out;
+}
+
+.ai-detector-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.ai-detector-badge:active {
+  transform: scale(0.98);
+}
+
+.ai-detector-badge:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+}
+
+@keyframes ai-detector-badge-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ─── Detail Panel ───────────────────────────────────────────────────────── */
+
+.ai-detector-detail {
+  display: none;
+  position: absolute;
+  left: 0;
+  min-width: 320px;
+  max-width: 400px;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 13px;
+  font-weight: 400;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  line-height: 1.5;
+  cursor: default;
+  overflow: hidden;
+}
+
+/* Default: opens downward */
+.ai-detector-detail--below {
+  top: calc(100% + 6px);
+  bottom: auto;
+}
+
+/* Flip: opens upward when near viewport bottom */
+.ai-detector-detail--above {
+  bottom: calc(100% + 6px);
+  top: auto;
+}
+
+/* Tier-colored top accent */
+.ai-detector-detail::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 12px 12px 0 0;
+  background: var(--tier-color, #4a6cf7);
+}
+
+.ai-detector-detail[aria-hidden="false"] {
+  display: block;
+  animation: ai-detector-panel-open 0.2s ease-out;
+}
+
+.ai-detector-detail.ai-detector-detail--closing {
+  display: block;
+  animation: ai-detector-panel-close 0.15s ease-in forwards;
+}
+
+@keyframes ai-detector-panel-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ai-detector-panel-close {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+}
+
+/* ─── Detail Panel Content ───────────────────────────────────────────────── */
+
+.ai-detector-detail__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2a2a3e;
+}
+
+.ai-detector-detail__gauge {
+  flex-shrink: 0;
+}
+
+.ai-detector-detail__gauge-ring {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.ai-detector-detail__gauge-bg {
+  stroke: #2a2a3e;
+}
+
+.ai-detector-detail__gauge-text {
+  font-weight: 800;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  fill: #fff;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.ai-detector-detail__header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ai-detector-detail__verdict {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.ai-detector-detail__wordcount {
+  font-size: 11px;
+  color: #777;
+}
+
+.ai-detector-detail__section-label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #999;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ai-detector-detail__signal {
+  margin-bottom: 8px;
+}
+
+.ai-detector-detail__signal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3px;
+}
+
+.ai-detector-detail__signal-name {
+  font-size: 12px;
+  color: #ccc;
+}
+
+.ai-detector-detail__signal-weight {
+  font-size: 11px;
+  color: #777;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+.ai-detector-detail__signal-bar {
+  height: 4px;
+  background: #2a2a3e;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.ai-detector-detail__signal-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease-out;
+}
+
+.ai-detector-detail__signal-phrases {
+  font-size: 11px;
+  color: #666;
+  margin: 2px 0 4px 0;
+  font-style: italic;
+}
+
+.ai-detector-detail__empty {
+  color: #777;
+  font-style: italic;
+  padding: 4px 0;
+}
+
+.ai-detector-detail__footer {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #2a2a3e;
+  font-size: 10px;
+  color: #555;
+}
+
+/* ─── Custom Selection ───────────────────────────────────────────────────── */
+
+.ai-detector-badge::selection,
+.ai-detector-detail::selection,
+.ai-detector-detail *::selection {
+  background: rgba(74, 108, 247, 0.3);
+  color: #fff;
+}

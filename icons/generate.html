@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Icon Generator — LinkedIn AI Post Detector</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #111;
+      color: #e0e0e0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+    h1 { font-size: 20px; font-weight: 700; color: #fff; }
+    p { font-size: 13px; color: #888; max-width: 500px; text-align: center; line-height: 1.6; }
+    .icons { display: flex; gap: 40px; align-items: flex-end; }
+    .icon-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .icon-group canvas {
+      border-radius: 8px;
+      image-rendering: pixelated;
+    }
+    .icon-group .label {
+      font-size: 12px;
+      color: #888;
+    }
+    .icon-group a {
+      font-size: 12px;
+      color: #4a6cf7;
+      text-decoration: none;
+      padding: 6px 16px;
+      border: 1px solid #4a6cf7;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .icon-group a:hover {
+      background: #4a6cf7;
+      color: #fff;
+    }
+    .preview-row {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      background: #1a1a2e;
+      padding: 20px 32px;
+      border-radius: 12px;
+    }
+    .preview-row .on-white {
+      background: #fff;
+      padding: 8px;
+      border-radius: 6px;
+    }
+    .preview-row .on-dark {
+      background: #1a1a2e;
+      padding: 8px;
+      border-radius: 6px;
+    }
+    .preview-row .label {
+      font-size: 11px;
+      color: #666;
+      margin-top: 4px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Icon Generator</h1>
+  <p>Click "Download" below each icon to save the PNG. Replace the files in the <code>icons/</code> folder.</p>
+
+  <div class="icons">
+    <div class="icon-group">
+      <canvas id="c128" width="128" height="128"></canvas>
+      <div class="label">128 x 128</div>
+      <a href="#" id="dl128">Download</a>
+    </div>
+    <div class="icon-group">
+      <canvas id="c48" width="48" height="48"></canvas>
+      <div class="label">48 x 48</div>
+      <a href="#" id="dl48">Download</a>
+    </div>
+    <div class="icon-group">
+      <canvas id="c16" width="16" height="16"></canvas>
+      <div class="label">16 x 16</div>
+      <a href="#" id="dl16">Download</a>
+    </div>
+  </div>
+
+  <h2 style="font-size: 14px; color: #888; margin-top: 20px;">Preview on backgrounds</h2>
+  <div class="preview-row">
+    <div>
+      <div class="on-white"><canvas id="prev-white" width="48" height="48"></canvas></div>
+      <div class="label">White bg</div>
+    </div>
+    <div>
+      <div class="on-dark"><canvas id="prev-dark" width="48" height="48"></canvas></div>
+      <div class="label">Dark bg</div>
+    </div>
+    <div>
+      <div class="on-white"><canvas id="prev-small-w" width="16" height="16" style="image-rendering: pixelated;"></canvas></div>
+      <div class="label">16px white</div>
+    </div>
+    <div>
+      <div class="on-dark"><canvas id="prev-small-d" width="16" height="16" style="image-rendering: pixelated;"></canvas></div>
+      <div class="label">16px dark</div>
+    </div>
+  </div>
+
+  <script>
+    function drawIcon(canvas) {
+      const size = canvas.width;
+      const ctx = canvas.getContext('2d');
+      const cx = size / 2;
+      const cy = size / 2;
+      const r = size / 2;
+
+      // Clear
+      ctx.clearRect(0, 0, size, size);
+
+      // Background circle
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle = '#0f0f1a';
+      ctx.fill();
+
+      // Subtle outer ring
+      ctx.beginPath();
+      ctx.arc(cx, cy, r - 0.5, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(74, 108, 247, 0.3)';
+      ctx.lineWidth = Math.max(1, size / 64);
+      ctx.stroke();
+
+      // Scan arcs — three concentric arcs radiating from bottom-left quadrant
+      const arcCenter = { x: cx - r * 0.12, y: cy + r * 0.05 };
+      const arcAngles = { start: -Math.PI * 0.75, end: -Math.PI * 0.05 };
+
+      const arcs = [
+        { radius: r * 0.28, alpha: 0.9, width: Math.max(1.5, size / 32) },
+        { radius: r * 0.48, alpha: 0.6, width: Math.max(1.5, size / 36) },
+        { radius: r * 0.68, alpha: 0.3, width: Math.max(1, size / 42) },
+      ];
+
+      for (const arc of arcs) {
+        ctx.beginPath();
+        ctx.arc(arcCenter.x, arcCenter.y, arc.radius, arcAngles.start, arcAngles.end);
+        ctx.strokeStyle = `rgba(74, 108, 247, ${arc.alpha})`;
+        ctx.lineWidth = arc.width;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+      }
+
+      // Center dot
+      const dotRadius = Math.max(1.5, size / 16);
+      ctx.beginPath();
+      ctx.arc(arcCenter.x, arcCenter.y, dotRadius, 0, Math.PI * 2);
+      ctx.fillStyle = '#4a6cf7';
+      ctx.fill();
+
+      // Glow on center dot
+      if (size >= 48) {
+        const glow = ctx.createRadialGradient(
+          arcCenter.x, arcCenter.y, 0,
+          arcCenter.x, arcCenter.y, dotRadius * 3
+        );
+        glow.addColorStop(0, 'rgba(74, 108, 247, 0.4)');
+        glow.addColorStop(1, 'rgba(74, 108, 247, 0)');
+        ctx.beginPath();
+        ctx.arc(arcCenter.x, arcCenter.y, dotRadius * 3, 0, Math.PI * 2);
+        ctx.fillStyle = glow;
+        ctx.fill();
+      }
+    }
+
+    // Draw all canvases
+    const sizes = [
+      { canvas: 'c128', size: 128, filename: 'icon128.png' },
+      { canvas: 'c48', size: 48, filename: 'icon48.png' },
+      { canvas: 'c16', size: 16, filename: 'icon16.png' },
+    ];
+
+    for (const { canvas: id, filename } of sizes) {
+      const canvas = document.getElementById(id);
+      drawIcon(canvas);
+
+      // Download link
+      const dlId = 'dl' + canvas.width;
+      const dlLink = document.getElementById(dlId);
+      if (dlLink) {
+        dlLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          const link = document.createElement('a');
+          link.download = filename;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        });
+      }
+    }
+
+    // Preview canvases
+    for (const id of ['prev-white', 'prev-dark']) {
+      drawIcon(document.getElementById(id));
+    }
+    for (const id of ['prev-small-w', 'prev-small-d']) {
+      drawIcon(document.getElementById(id));
+    }
+  </script>
+</body>
+</html>

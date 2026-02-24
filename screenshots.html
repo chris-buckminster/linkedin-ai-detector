@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chrome Web Store Screenshots — LinkedIn AI Post Detector</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #111;
+      color: #e0e0e0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    h1 { font-size: 22px; font-weight: 700; color: #fff; }
+    h2 { font-size: 16px; font-weight: 600; color: #aaa; margin-bottom: 8px; }
+    .instructions { font-size: 13px; color: #888; max-width: 700px; text-align: center; line-height: 1.7; margin-bottom: 10px; }
+
+    .screenshot-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .screenshot-frame {
+      border: 2px solid #333;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    }
+
+    .dl-btn {
+      padding: 8px 24px;
+      background: #4a6cf7;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .dl-btn:hover { background: #3b5ce4; }
+
+    .size-label { font-size: 11px; color: #666; }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       SCREENSHOT 1: Feed View (1280 x 800)
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .feed-screenshot {
+      width: 1280px;
+      height: 800px;
+      background: #f3f2ef;
+      display: flex;
+      flex-direction: column;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      position: relative;
+    }
+
+    /* ── Toolbar ── */
+    .fs-toolbar {
+      height: 44px;
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .fs-toolbar-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .fs-toolbar-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .fs-toolbar-dot--red { background: #ff5f57; }
+    .fs-toolbar-dot--yellow { background: #febc2e; }
+    .fs-toolbar-dot--green { background: #28c840; }
+
+    .fs-toolbar-url {
+      flex: 1;
+      height: 28px;
+      background: #f3f2ef;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .fs-toolbar-url .lock { color: #16a34a; margin-right: 6px; font-size: 11px; }
+
+    /* ── Feed Layout ── */
+    .fs-body {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 24px 0;
+      overflow: hidden;
+    }
+
+    .fs-feed {
+      width: 560px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* ── Sidebar ── */
+    .fs-sidebar {
+      width: 260px;
+      margin-left: 24px;
+      flex-shrink: 0;
+    }
+
+    .fs-sidebar-card {
+      background: #fff;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      padding: 20px;
+    }
+
+    .fs-sidebar-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 12px;
+    }
+
+    .fs-sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .fs-sidebar-item:last-child { border-bottom: none; }
+
+    .fs-sidebar-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      flex-shrink: 0;
+    }
+
+    .fs-sidebar-text {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.4;
+    }
+    .fs-sidebar-text strong { color: #333; }
+
+    /* ── Post Card ── */
+    .fs-post {
+      background: #fff;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      padding: 16px 20px;
+      position: relative;
+    }
+
+    .fs-post-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .fs-post-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .fs-post-avatar--1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .fs-post-avatar--2 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+    .fs-post-avatar--3 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+
+    .fs-post-author {
+      font-size: 14px;
+      font-weight: 700;
+      color: #333;
+      line-height: 1.3;
+    }
+
+    .fs-post-meta {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .fs-post-text {
+      font-size: 14px;
+      line-height: 1.55;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .fs-post-text p {
+      margin-bottom: 8px;
+    }
+
+    /* ── Badge ── */
+    .fs-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      margin: 8px 0 4px 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      border: 1px solid rgba(0,0,0,0.08);
+      position: relative;
+      cursor: default;
+    }
+
+    /* ── Detail Panel ── */
+    .fs-detail {
+      position: absolute;
+      left: 20px;
+      top: calc(100% - 40px);
+      min-width: 320px;
+      max-width: 380px;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 13px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      z-index: 100;
+      line-height: 1.5;
+    }
+
+    .fs-detail::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .fs-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #2a2a3e;
+    }
+
+    .fs-detail-verdict {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .fs-detail-wordcount {
+      font-size: 11px;
+      color: #777;
+      margin-top: 2px;
+    }
+
+    .fs-detail-label {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #999;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .fs-detail-signal {
+      margin-bottom: 8px;
+    }
+
+    .fs-detail-signal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+
+    .fs-detail-signal-name {
+      font-size: 12px;
+      color: #ccc;
+    }
+
+    .fs-detail-signal-weight {
+      font-size: 11px;
+      color: #777;
+    }
+
+    .fs-detail-signal-bar {
+      height: 4px;
+      background: #2a2a3e;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .fs-detail-signal-fill {
+      height: 100%;
+      border-radius: 2px;
+    }
+
+    .fs-detail-phrases {
+      font-size: 11px;
+      color: #666;
+      margin: 2px 0 4px 0;
+      font-style: italic;
+    }
+
+    .fs-detail-footer {
+      margin-top: 12px;
+      padding-top: 8px;
+      border-top: 1px solid #2a2a3e;
+      font-size: 10px;
+      color: #555;
+    }
+
+    /* ── Post Actions ── */
+    .fs-post-actions {
+      display: flex;
+      gap: 4px;
+      padding-top: 10px;
+      border-top: 1px solid #eee;
+      margin-top: 10px;
+    }
+
+    .fs-action {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 0;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #666;
+      font-weight: 600;
+    }
+
+    /* ── Promo Banner ── */
+    .fs-promo {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: linear-gradient(180deg, transparent 0%, rgba(15, 15, 26, 0.95) 100%);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 14px;
+    }
+
+    .fs-promo-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(26, 26, 46, 0.95);
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(74, 108, 247, 0.3);
+    }
+
+    .fs-promo-icon {
+      width: 28px;
+      height: 28px;
+      background: #0f0f1a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .fs-promo-text {
+      font-size: 13px;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .fs-promo-sub {
+      font-size: 11px;
+      color: #888;
+      font-weight: 400;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       SCREENSHOT 2: Popup View (1280 x 800)
+       ═══════════════════════════════════════════════════════════════════════════ */
+
+    .popup-screenshot {
+      width: 1280px;
+      height: 800px;
+      background: #f3f2ef;
+      display: flex;
+      flex-direction: column;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      position: relative;
+    }
+
+    .ps-bg {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 60px;
+      position: relative;
+    }
+
+    /* Blurred feed in background */
+    .ps-feed-bg {
+      position: absolute;
+      top: 44px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      padding-top: 24px;
+      filter: blur(3px) brightness(0.85);
+      opacity: 0.6;
+    }
+
+    .ps-feed-bg .fs-post {
+      width: 560px;
+    }
+
+    /* Popup widget */
+    .ps-popup-anchor {
+      position: absolute;
+      top: 44px;
+      right: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .ps-ext-icon {
+      width: 28px;
+      height: 28px;
+      background: #0f0f1a;
+      border-radius: 50%;
+      border: 2px solid #4a6cf7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+      margin-right: 4px;
+      font-size: 12px;
+    }
+
+    .ps-popup {
+      width: 360px;
+      background: #0f0f1a;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+      color: #e0e0e0;
+      border: 1px solid #2a2a3e;
+    }
+
+    /* Popup header */
+    .ps-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid transparent;
+      border-image: linear-gradient(90deg, #4a6cf7 0%, #7b93f7 50%, transparent 100%) 1;
+    }
+
+    .ps-header-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #1a1a2e, #2a2a3e);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .ps-header h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .ps-header p {
+      font-size: 10px;
+      color: #777;
+      margin-top: 1px;
+    }
+
+    /* Scale bar */
+    .ps-scale {
+      margin-bottom: 16px;
+    }
+
+    .ps-scale-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .ps-scale-track {
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #16a34a 0%, #65a30d 15%, #ca8a04 35%, #ea580c 55%, #dc2626 75%);
+    }
+
+    .ps-scale-ticks {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8px;
+      color: #555;
+      margin-top: 3px;
+    }
+
+    /* Textarea */
+    .ps-section-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #777;
+      margin-bottom: 8px;
+    }
+
+    .ps-textarea {
+      width: 100%;
+      height: 64px;
+      background: #1a1a2e;
+      border: 1px solid #2a2a3e;
+      border-radius: 8px;
+      color: #999;
+      font-size: 11px;
+      font-family: inherit;
+      padding: 10px;
+      resize: none;
+      outline: none;
+      line-height: 1.5;
+      overflow: hidden;
+    }
+
+    .ps-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .ps-btn {
+      flex: 1;
+      padding: 9px 12px;
+      background: #4a6cf7;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: default;
+    }
+
+    .ps-meta {
+      font-size: 10px;
+      color: #555;
+    }
+
+    /* Results */
+    .ps-result {
+      margin-top: 14px;
+    }
+
+    .ps-result-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #2a2a3e;
+    }
+
+    .ps-result-verdict {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .ps-result-wc {
+      font-size: 10px;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    .ps-signals-label {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #888;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .ps-signal {
+      margin-bottom: 8px;
+    }
+
+    .ps-signal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+
+    .ps-signal-name {
+      font-size: 11px;
+      color: #bbb;
+    }
+
+    .ps-signal-weight {
+      font-size: 10px;
+      color: #666;
+    }
+
+    .ps-signal-bar {
+      height: 4px;
+      background: #2a2a3e;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .ps-signal-fill {
+      height: 100%;
+      border-radius: 2px;
+    }
+
+    .ps-signal-phrases {
+      font-size: 10px;
+      color: #555;
+      font-style: italic;
+      margin-top: 2px;
+    }
+
+    .ps-info {
+      font-size: 10px;
+      line-height: 1.6;
+      color: #666;
+      padding: 10px 12px;
+      background: #151520;
+      border-radius: 8px;
+      border: 1px solid #1e1e30;
+      margin-top: 14px;
+    }
+
+    .ps-footer {
+      margin-top: 12px;
+      padding-top: 8px;
+      border-top: 1px solid #1e1e30;
+      font-size: 9px;
+      color: #444;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .ps-footer-privacy { color: #16a34a; }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       SCREENSHOT 3: Promo Tile (440 x 280)
+       ═══════════════════════════════════════════════════════════════════════════ */
+    .promo-screenshot {
+      width: 440px;
+      height: 280px;
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .promo-screenshot::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(74, 108, 247, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .promo-screenshot::after {
+      content: '';
+      position: absolute;
+      bottom: -40px;
+      left: -40px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(74, 108, 247, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .promo-badges {
+      display: flex;
+      gap: 8px;
+      z-index: 1;
+    }
+
+    .promo-badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .promo-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      text-align: center;
+      z-index: 1;
+      line-height: 1.3;
+    }
+
+    .promo-subtitle {
+      font-size: 13px;
+      color: #888;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .promo-features {
+      display: flex;
+      gap: 20px;
+      z-index: 1;
+    }
+
+    .promo-feature {
+      font-size: 11px;
+      color: #aaa;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .promo-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #4a6cf7;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Chrome Web Store Screenshots</h1>
+  <p class="instructions">
+    Each frame below is sized to Chrome Web Store spec. Click "Download PNG" to save each one,
+    or use <strong>Cmd+Shift+4</strong> (Mac) / <strong>Win+Shift+S</strong> (Windows) to capture manually.
+  </p>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       SCREENSHOT 1: Feed View (1280 x 800)
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <div class="screenshot-wrapper">
+    <h2>Screenshot 1 — Feed View (1280 x 800)</h2>
+    <div class="screenshot-frame">
+      <div class="feed-screenshot" id="ss-feed">
+
+        <!-- Toolbar -->
+        <div class="fs-toolbar">
+          <div class="fs-toolbar-dots">
+            <div class="fs-toolbar-dot fs-toolbar-dot--red"></div>
+            <div class="fs-toolbar-dot fs-toolbar-dot--yellow"></div>
+            <div class="fs-toolbar-dot fs-toolbar-dot--green"></div>
+          </div>
+          <div class="fs-toolbar-url">
+            <span class="lock">&#x1F512;</span> linkedin.com/feed
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="fs-body">
+          <div class="fs-feed">
+
+            <!-- Post 1: High AI score with detail panel open -->
+            <div class="fs-post" style="z-index: 50;">
+              <div class="fs-post-header">
+                <div class="fs-post-avatar fs-post-avatar--1"></div>
+                <div>
+                  <div class="fs-post-author">Alex Thompson</div>
+                  <div class="fs-post-meta">Leadership Coach &bull; 2h</div>
+                </div>
+              </div>
+              <div class="fs-post-text">
+                <p>In today's rapidly evolving landscape, it's not just about leveraging cutting-edge technology — it's about fostering a culture of innovation that empowers your team to navigate the complexities of our ever-changing world.</p>
+                <p>Here's the thing: transformative leaders don't just embrace the journey, they spearhead a paradigm shift. Agree? 💡</p>
+              </div>
+              <div class="fs-badge" style="background: #dc2626;">AI 85%</div>
+
+              <!-- Detail Panel -->
+              <div class="fs-detail" style="top: auto; bottom: -225px; left: 10px;">
+                <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 12px 12px 0 0; background: #dc2626;"></div>
+                <div class="fs-detail-header">
+                  <!-- SVG Gauge -->
+                  <svg width="56" height="56" viewBox="0 0 56 56">
+                    <circle cx="28" cy="28" r="25.5" stroke-width="5" fill="none" stroke="#2a2a3e" stroke-linecap="round"/>
+                    <circle cx="28" cy="28" r="25.5" stroke-width="5" fill="none" stroke="#dc2626" stroke-linecap="round"
+                      stroke-dasharray="160.2" stroke-dashoffset="24"
+                      transform="rotate(-90 28 28)"/>
+                    <text x="28" y="28" font-size="14" font-weight="800" fill="#fff" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, sans-serif">85%</text>
+                  </svg>
+                  <div>
+                    <div class="fs-detail-verdict">Very likely AI-generated</div>
+                    <div class="fs-detail-wordcount">47 words analyzed</div>
+                  </div>
+                </div>
+                <div class="fs-detail-label">Signals Detected</div>
+                <div class="fs-detail-signal">
+                  <div class="fs-detail-signal-header">
+                    <span class="fs-detail-signal-name">4 high-signal AI phrases detected</span>
+                    <span class="fs-detail-signal-weight">+25</span>
+                  </div>
+                  <div class="fs-detail-signal-bar"><div class="fs-detail-signal-fill" style="width: 100%; background: #dc2626;"></div></div>
+                </div>
+                <div class="fs-detail-phrases">"in today's rapidly evolving", "it's not just about", "navigate the complexities"</div>
+                <div class="fs-detail-signal">
+                  <div class="fs-detail-signal-header">
+                    <span class="fs-detail-signal-name">Hook → CTA formula</span>
+                    <span class="fs-detail-signal-weight">+8</span>
+                  </div>
+                  <div class="fs-detail-signal-bar"><div class="fs-detail-signal-fill" style="width: 32%; background: #dc2626;"></div></div>
+                </div>
+                <div class="fs-detail-signal">
+                  <div class="fs-detail-signal-header">
+                    <span class="fs-detail-signal-name">3 corporate/AI buzzwords</span>
+                    <span class="fs-detail-signal-weight">+7</span>
+                  </div>
+                  <div class="fs-detail-signal-bar"><div class="fs-detail-signal-fill" style="width: 28%; background: #dc2626;"></div></div>
+                </div>
+                <div class="fs-detail-footer">Heuristic analysis only — not definitive.</div>
+              </div>
+            </div>
+
+            <!-- Post 2: Medium score -->
+            <div class="fs-post">
+              <div class="fs-post-header">
+                <div class="fs-post-avatar fs-post-avatar--2"></div>
+                <div>
+                  <div class="fs-post-author">Maria Chen</div>
+                  <div class="fs-post-meta">Product Manager at Stripe &bull; 5h</div>
+                </div>
+              </div>
+              <div class="fs-post-text">
+                <p>We just shipped our biggest update this quarter. Took 3 months of iteration with our design team to get the checkout flow right. Key takeaways from the process:</p>
+                <p>1. Start with the unhappy path first<br>2. Don't optimize for speed until you've nailed clarity<br>3. Talk to customers weekly, not monthly</p>
+              </div>
+              <div class="fs-badge" style="background: #ca8a04;">Maybe 34%</div>
+            </div>
+
+            <!-- Post 3: Low score -->
+            <div class="fs-post">
+              <div class="fs-post-header">
+                <div class="fs-post-avatar fs-post-avatar--3"></div>
+                <div>
+                  <div class="fs-post-author">James Park</div>
+                  <div class="fs-post-meta">Senior Engineer at Vercel &bull; 8h</div>
+                </div>
+              </div>
+              <div class="fs-post-text">
+                <p>Spent the weekend debugging a race condition in our edge middleware. Turned out to be a stale closure capturing an old config object. Two days of head-scratching for a one-line fix. Classic.</p>
+              </div>
+              <div class="fs-badge" style="background: #16a34a;">Human 5%</div>
+            </div>
+
+          </div>
+
+          <!-- Sidebar -->
+          <div class="fs-sidebar">
+            <div class="fs-sidebar-card">
+              <div class="fs-sidebar-title">LinkedIn AI Detector</div>
+              <div style="font-size: 12px; color: #666; line-height: 1.5; margin-bottom: 12px;">
+                Automatically scans posts in your feed for AI-generated content patterns.
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <div style="padding: 3px 8px; border-radius: 10px; background: #dc2626; color: #fff; font-size: 10px; font-weight: 600;">AI 85%</div>
+                <div style="padding: 3px 8px; border-radius: 10px; background: #ea580c; color: #fff; font-size: 10px; font-weight: 600;">AI? 55%</div>
+                <div style="padding: 3px 8px; border-radius: 10px; background: #ca8a04; color: #fff; font-size: 10px; font-weight: 600;">Maybe 34%</div>
+                <div style="padding: 3px 8px; border-radius: 10px; background: #65a30d; color: #fff; font-size: 10px; font-weight: 600;">Mild 18%</div>
+                <div style="padding: 3px 8px; border-radius: 10px; background: #16a34a; color: #fff; font-size: 10px; font-weight: 600;">Human 5%</div>
+              </div>
+              <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid #eee; font-size: 11px; color: #16a34a; font-weight: 600;">
+                &#x1F512; 100% private &middot; runs locally
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <button class="dl-btn" onclick="downloadScreenshot('ss-feed', 'screenshot-feed-1280x800.png')">Download PNG</button>
+    <span class="size-label">1280 x 800</span>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       SCREENSHOT 2: Popup View (1280 x 800)
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <div class="screenshot-wrapper">
+    <h2>Screenshot 2 — Popup Analyzer (1280 x 800)</h2>
+    <div class="screenshot-frame">
+      <div class="popup-screenshot" id="ss-popup">
+
+        <!-- Toolbar -->
+        <div class="fs-toolbar">
+          <div class="fs-toolbar-dots">
+            <div class="fs-toolbar-dot fs-toolbar-dot--red"></div>
+            <div class="fs-toolbar-dot fs-toolbar-dot--yellow"></div>
+            <div class="fs-toolbar-dot fs-toolbar-dot--green"></div>
+          </div>
+          <div class="fs-toolbar-url">
+            <span class="lock">&#x1F512;</span> linkedin.com/feed
+          </div>
+        </div>
+
+        <div class="ps-bg">
+          <!-- Blurred background posts -->
+          <div class="ps-feed-bg">
+            <div style="width: 560px; display: flex; flex-direction: column; gap: 10px;">
+              <div class="fs-post">
+                <div class="fs-post-header">
+                  <div class="fs-post-avatar fs-post-avatar--1"></div>
+                  <div>
+                    <div class="fs-post-author">Sarah Miller</div>
+                    <div class="fs-post-meta">VP of Engineering &bull; 1h</div>
+                  </div>
+                </div>
+                <div class="fs-post-text" style="color: #666;">
+                  <p>In today's rapidly evolving tech landscape, it's crucial to foster a culture of continuous learning. Here are 5 key strategies that have transformed our engineering org...</p>
+                </div>
+              </div>
+              <div class="fs-post">
+                <div class="fs-post-header">
+                  <div class="fs-post-avatar fs-post-avatar--3"></div>
+                  <div>
+                    <div class="fs-post-author">David Kim</div>
+                    <div class="fs-post-meta">Software Engineer &bull; 4h</div>
+                  </div>
+                </div>
+                <div class="fs-post-text" style="color: #666;">
+                  <p>Just finished migrating our monolith to microservices. It took 6 months, 3 rewrites, and more coffee than I'd like to admit.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Popup -->
+          <div class="ps-popup-anchor">
+            <div class="ps-ext-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16">
+                <circle cx="8" cy="8" r="7.5" fill="#0f0f1a" stroke="rgba(74,108,247,0.3)" stroke-width="0.5"/>
+                <circle cx="7" cy="8.5" r="1.5" fill="#4a6cf7"/>
+                <path d="M 5.2 6.8 A 3 3 0 0 1 8.5 5.2" stroke="rgba(74,108,247,0.9)" stroke-width="1" fill="none" stroke-linecap="round"/>
+                <path d="M 4 5.5 A 5 5 0 0 1 10 4" stroke="rgba(74,108,247,0.5)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="ps-popup">
+              <!-- Header -->
+              <div class="ps-header">
+                <div class="ps-header-icon">
+                  <svg width="18" height="18" viewBox="0 0 18 18">
+                    <circle cx="9" cy="9" r="8.5" fill="#0f0f1a" stroke="rgba(74,108,247,0.3)" stroke-width="0.5"/>
+                    <circle cx="8" cy="9.5" r="1.5" fill="#4a6cf7"/>
+                    <path d="M 6 7.5 A 3.5 3.5 0 0 1 10.5 5.5" stroke="rgba(74,108,247,0.8)" stroke-width="1" fill="none" stroke-linecap="round"/>
+                    <path d="M 4.5 6 A 6 6 0 0 1 12 4" stroke="rgba(74,108,247,0.4)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3>LinkedIn AI Detector</h3>
+                  <p style="font-size: 10px; color: #777; margin-top: 1px;">Heuristic AI content analysis</p>
+                </div>
+              </div>
+
+              <!-- Scale bar -->
+              <div class="ps-scale">
+                <div class="ps-scale-labels">
+                  <span>Human</span><span>Mild</span><span>Maybe</span><span>Likely AI</span><span>AI</span>
+                </div>
+                <div class="ps-scale-track"></div>
+                <div class="ps-scale-ticks">
+                  <span>0</span><span>15</span><span>30</span><span>50</span><span>70</span><span>100</span>
+                </div>
+              </div>
+
+              <!-- Textarea -->
+              <div style="margin-bottom: 14px;">
+                <div class="ps-section-title">Analyze Text</div>
+                <div class="ps-textarea" style="font-size: 10.5px; line-height: 1.45; color: #aaa;">In today's rapidly evolving landscape, it's not just about leveraging cutting-edge technology — it's about fostering innovation that empowers teams...</div>
+                <div class="ps-controls">
+                  <div class="ps-btn" style="text-align: center;">Analyze</div>
+                  <span class="ps-meta">32 words</span>
+                </div>
+              </div>
+
+              <!-- Results -->
+              <div class="ps-result">
+                <div class="ps-result-header">
+                  <!-- SVG Gauge -->
+                  <svg width="64" height="64" viewBox="0 0 64 64">
+                    <circle cx="32" cy="32" r="29.5" stroke-width="5" fill="none" stroke="#2a2a3e" stroke-linecap="round"/>
+                    <circle cx="32" cy="32" r="29.5" stroke-width="5" fill="none" stroke="#ea580c" stroke-linecap="round"
+                      stroke-dasharray="185.4" stroke-dashoffset="83.4"
+                      transform="rotate(-90 32 32)"/>
+                    <text x="32" y="31" font-size="16" font-weight="800" fill="#fff" text-anchor="middle" dominant-baseline="central" font-family="-apple-system, sans-serif">55%</text>
+                  </svg>
+                  <div>
+                    <div class="ps-result-verdict">Likely AI-generated</div>
+                    <div class="ps-result-wc">32 words analyzed</div>
+                  </div>
+                </div>
+
+                <div class="ps-signals-label">Signals Detected</div>
+
+                <div class="ps-signal">
+                  <div class="ps-signal-header">
+                    <span class="ps-signal-name">3 high-signal AI phrases detected</span>
+                    <span class="ps-signal-weight">+15</span>
+                  </div>
+                  <div class="ps-signal-bar"><div class="ps-signal-fill" style="width: 60%; background: #ea580c;"></div></div>
+                </div>
+                <div class="ps-signal-phrases">"in today's rapidly evolving", "it's not just about", "cutting-edge"</div>
+
+                <div class="ps-signal">
+                  <div class="ps-signal-header">
+                    <span class="ps-signal-name">3 corporate/AI buzzwords</span>
+                    <span class="ps-signal-weight">+7</span>
+                  </div>
+                  <div class="ps-signal-bar"><div class="ps-signal-fill" style="width: 28%; background: #ea580c;"></div></div>
+                </div>
+
+                <div class="ps-signal">
+                  <div class="ps-signal-header">
+                    <span class="ps-signal-name">Engagement bait: Agree?</span>
+                    <span class="ps-signal-weight">+5</span>
+                  </div>
+                  <div class="ps-signal-bar"><div class="ps-signal-fill" style="width: 20%; background: #ea580c;"></div></div>
+                </div>
+              </div>
+
+              <!-- Info -->
+              <div class="ps-info">
+                Checks for overused AI phrases, structural formulas, sentence uniformity, and engagement bait. A rough guide, not a definitive judgment.
+              </div>
+
+              <!-- Footer -->
+              <div class="ps-footer">
+                <span>v1.1.0</span>
+                <span class="ps-footer-privacy">&#x1F512; 100% private &middot; runs locally</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <button class="dl-btn" onclick="downloadScreenshot('ss-popup', 'screenshot-popup-1280x800.png')">Download PNG</button>
+    <span class="size-label">1280 x 800</span>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       SCREENSHOT 3: Promo Tile (440 x 280)
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <div class="screenshot-wrapper">
+    <h2>Promo Tile (440 x 280)</h2>
+    <div class="screenshot-frame">
+      <div class="promo-screenshot" id="ss-promo">
+        <div class="promo-badges">
+          <div class="promo-badge" style="background: #dc2626;">AI 85%</div>
+          <div class="promo-badge" style="background: #ca8a04;">Maybe 34%</div>
+          <div class="promo-badge" style="background: #16a34a;">Human 5%</div>
+        </div>
+        <div class="promo-title">LinkedIn AI<br>Post Detector</div>
+        <div class="promo-subtitle">Spot AI-generated posts in your feed instantly</div>
+        <div class="promo-features">
+          <div class="promo-feature"><div class="promo-dot"></div> Inline badges</div>
+          <div class="promo-feature"><div class="promo-dot"></div> Signal breakdown</div>
+          <div class="promo-feature"><div class="promo-dot"></div> 100% private</div>
+        </div>
+      </div>
+    </div>
+    <button class="dl-btn" onclick="downloadScreenshot('ss-promo', 'promo-tile-440x280.png')">Download PNG</button>
+    <span class="size-label">440 x 280</span>
+  </div>
+
+
+  <script>
+    async function downloadScreenshot(elementId, filename) {
+      const el = document.getElementById(elementId);
+      const rect = el.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      // Use the experimental browser API if available
+      if (typeof html2canvas !== 'undefined') {
+        const c = await html2canvas(el, { scale: dpr, useCORS: true });
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = c.toDataURL('image/png');
+        link.click();
+        return;
+      }
+
+      // Fallback: SVG foreignObject approach
+      const clone = el.cloneNode(true);
+      const styles = document.querySelectorAll('style');
+      let styleText = '';
+      styles.forEach(s => styleText += s.textContent);
+
+      const svgData = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${rect.width}" height="${rect.height}">
+          <defs><style type="text/css"><![CDATA[${styleText}]]></style></defs>
+          <foreignObject width="100%" height="100%">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+              ${el.outerHTML}
+            </div>
+          </foreignObject>
+        </svg>
+      `;
+
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+      const img = new Image();
+
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, rect.width, rect.height);
+        URL.revokeObjectURL(url);
+
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        alert(`Auto-download failed. Use Cmd+Shift+4 (Mac) or Win+Shift+S (Windows) to screenshot the "${filename.replace('.png','')}" frame manually.`);
+      };
+
+      img.src = url;
+    }
+  </script>
+
+</body>
+</html>

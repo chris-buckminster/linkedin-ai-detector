@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn AI Detector</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 360px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      padding: 20px;
+    }
+
+    ::selection {
+      background: rgba(74, 108, 247, 0.3);
+      color: #fff;
+    }
+
+    /* ─── Scrollbar ──────────────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #2a2a3e; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3a3a4e; }
+
+    /* ─── Header ─────────────────────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid transparent;
+      border-image: linear-gradient(90deg, #4a6cf7 0%, #7b93f7 50%, transparent 100%) 1;
+    }
+
+    .header-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #1a1a2e, #2a2a3e);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .header-text h1 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .header-text p {
+      font-size: 10px;
+      color: #777;
+      margin-top: 1px;
+    }
+
+    /* ─── Score Scale (compact gradient bar) ──────────────────────────────── */
+    .scale-bar {
+      margin-bottom: 16px;
+    }
+
+    .scale-bar__labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      color: #666;
+      margin-bottom: 4px;
+      padding: 0 1px;
+    }
+
+    .scale-bar__track {
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #16a34a 0%, #65a30d 15%, #ca8a04 35%, #ea580c 55%, #dc2626 75%);
+      position: relative;
+    }
+
+    .scale-bar__ticks {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8px;
+      color: #555;
+      margin-top: 3px;
+      padding: 0 1px;
+    }
+
+    /* ─── Test Area ──────────────────────────────────────────────────────── */
+    .section {
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #777;
+      margin-bottom: 8px;
+    }
+
+    .test-area textarea {
+      width: 100%;
+      height: 72px;
+      background: #1a1a2e;
+      border: 1px solid #2a2a3e;
+      border-radius: 8px;
+      color: #e0e0e0;
+      font-size: 12px;
+      font-family: inherit;
+      padding: 10px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .test-area textarea:focus {
+      border-color: #4a6cf7;
+    }
+
+    .test-area textarea::placeholder {
+      color: #444;
+    }
+
+    .test-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .test-btn {
+      flex: 1;
+      padding: 9px 12px;
+      background: #4a6cf7;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+    }
+
+    .test-btn:hover:not(:disabled) {
+      background: #3b5ce4;
+    }
+
+    .test-btn:active:not(:disabled) {
+      background: #2d4bc7;
+    }
+
+    .test-btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    .test-btn:focus-visible {
+      outline: 2px solid #7b93f7;
+      outline-offset: 2px;
+    }
+
+    .test-meta {
+      font-size: 10px;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    /* ─── Results ────────────────────────────────────────────────────────── */
+    #test-result {
+      margin-top: 14px;
+    }
+
+    .result-empty {
+      text-align: center;
+      padding: 16px 0;
+      color: #444;
+      font-size: 11px;
+      font-style: italic;
+    }
+
+    .result-content {
+      display: none;
+      animation: result-enter 0.25s ease-out;
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #2a2a3e;
+    }
+
+    .result-gauge {
+      flex-shrink: 0;
+    }
+
+    .result-gauge svg {
+      display: block;
+    }
+
+    .gauge-ring {
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .gauge-bg {
+      stroke: #2a2a3e;
+    }
+
+    .gauge-text {
+      font-weight: 800;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      fill: #fff;
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+
+    .gauge-label {
+      font-size: 9px;
+      fill: #777;
+      text-anchor: middle;
+    }
+
+    .result-info .result-verdict {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .result-info .result-wordcount {
+      font-size: 10px;
+      color: #666;
+    }
+
+    .result-signals-label {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #888;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .result-signal {
+      margin-bottom: 8px;
+    }
+
+    .result-signal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+
+    .result-signal-name {
+      font-size: 11px;
+      color: #bbb;
+    }
+
+    .result-signal-weight {
+      font-size: 10px;
+      color: #666;
+      margin-left: 8px;
+      white-space: nowrap;
+    }
+
+    .result-signal-bar {
+      height: 4px;
+      background: #2a2a3e;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .result-signal-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.4s ease-out;
+    }
+
+    .result-signal-phrases {
+      font-size: 10px;
+      color: #555;
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    .result-none {
+      color: #666;
+      font-style: italic;
+      font-size: 12px;
+      padding: 4px 0;
+    }
+
+    @keyframes result-enter {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Info ────────────────────────────────────────────────────────────── */
+    .info {
+      font-size: 10px;
+      line-height: 1.6;
+      color: #666;
+      padding: 10px 12px;
+      background: #151520;
+      border-radius: 8px;
+      border: 1px solid #1e1e30;
+    }
+
+    /* ─── Footer ──────────────────────────────────────────────────────────── */
+    .footer {
+      margin-top: 12px;
+      padding-top: 8px;
+      border-top: 1px solid #1e1e30;
+      font-size: 9px;
+      color: #444;
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .footer-privacy {
+      color: #16a34a;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-icon">🔍</div>
+    <div class="header-text">
+      <h1>LinkedIn AI Detector</h1>
+      <p>Heuristic AI content analysis</p>
+    </div>
+  </div>
+
+  <div class="scale-bar">
+    <div class="scale-bar__labels">
+      <span>Human</span>
+      <span>Mild</span>
+      <span>Maybe</span>
+      <span>Likely AI</span>
+      <span>AI</span>
+    </div>
+    <div class="scale-bar__track"></div>
+    <div class="scale-bar__ticks">
+      <span>0</span>
+      <span>15</span>
+      <span>30</span>
+      <span>50</span>
+      <span>70</span>
+      <span>100</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Analyze Text</div>
+    <div class="test-area">
+      <textarea id="test-input" placeholder="Paste any text here to check for AI signals..."></textarea>
+      <div class="test-controls">
+        <button class="test-btn" id="test-btn" disabled>Analyze</button>
+        <span class="test-meta" id="test-meta">0 words</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="test-result">
+    <div class="result-empty" id="result-empty">Paste text above and click Analyze</div>
+    <div class="result-content" id="result-content">
+      <div class="result-header">
+        <div class="result-gauge" id="result-gauge"></div>
+        <div class="result-info">
+          <div class="result-verdict" id="result-verdict"></div>
+          <div class="result-wordcount" id="result-wordcount"></div>
+        </div>
+      </div>
+      <div id="result-signals"></div>
+    </div>
+  </div>
+
+  <div class="info">
+    Checks for overused AI phrases, structural formulas, sentence uniformity, and engagement bait. A rough guide, not a definitive judgment.
+  </div>
+
+  <div class="footer">
+    <span id="footer-version"></span>
+    <span class="footer-privacy">100% private &middot; runs locally</span>
+  </div>
+
+  <script src="detector.js"></script>
+  <script>
+    const inputEl = document.getElementById('test-input');
+    const btnEl = document.getElementById('test-btn');
+    const metaEl = document.getElementById('test-meta');
+    const emptyEl = document.getElementById('result-empty');
+    const contentEl = document.getElementById('result-content');
+
+    // Version
+    const manifest = chrome.runtime.getManifest();
+    document.getElementById('footer-version').textContent = `v${manifest.version}`;
+
+    // Auto-focus textarea
+    inputEl.focus();
+
+    // Live word count + button state
+    inputEl.addEventListener('input', () => {
+      const text = inputEl.value.trim();
+      const words = text ? text.split(/\s+/).filter(w => w.length > 0).length : 0;
+      metaEl.textContent = `${words} word${words !== 1 ? 's' : ''}`;
+      btnEl.disabled = words === 0;
+    });
+
+    // SVG gauge builder
+    function buildGauge(score, color) {
+      const size = 64;
+      const sw = 5;
+      const r = (size - sw) / 2;
+      const c = 2 * Math.PI * r;
+      const offset = c - (score / 100) * c;
+
+      const ns = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(ns, 'svg');
+      svg.setAttribute('width', size);
+      svg.setAttribute('height', size);
+      svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
+
+      const bg = document.createElementNS(ns, 'circle');
+      bg.setAttribute('cx', size/2); bg.setAttribute('cy', size/2);
+      bg.setAttribute('r', r); bg.setAttribute('stroke-width', sw);
+      bg.classList.add('gauge-ring', 'gauge-bg');
+      svg.appendChild(bg);
+
+      const arc = document.createElementNS(ns, 'circle');
+      arc.setAttribute('cx', size/2); arc.setAttribute('cy', size/2);
+      arc.setAttribute('r', r); arc.setAttribute('stroke-width', sw);
+      arc.setAttribute('stroke', color);
+      arc.setAttribute('stroke-dasharray', c);
+      arc.setAttribute('stroke-dashoffset', c); // start empty
+      arc.setAttribute('transform', `rotate(-90 ${size/2} ${size/2})`);
+      arc.classList.add('gauge-ring');
+      svg.appendChild(arc);
+
+      const txt = document.createElementNS(ns, 'text');
+      txt.setAttribute('x', size/2); txt.setAttribute('y', size/2 - 2);
+      txt.setAttribute('font-size', '16');
+      txt.classList.add('gauge-text');
+      txt.textContent = `${score}%`;
+      svg.appendChild(txt);
+
+      // Animate the arc fill
+      requestAnimationFrame(() => {
+        arc.style.transition = 'stroke-dashoffset 0.6s ease-out';
+        arc.setAttribute('stroke-dashoffset', offset);
+      });
+
+      return svg;
+    }
+
+    // Analysis
+    function runAnalysis() {
+      const text = inputEl.value;
+      if (!text.trim()) return;
+
+      const result = AIDetector.analyze(text);
+      const tier = AIDetector.getScoreInfo(result.score);
+
+      emptyEl.style.display = 'none';
+      contentEl.style.display = 'block';
+
+      // Gauge
+      const gaugeEl = document.getElementById('result-gauge');
+      gaugeEl.innerHTML = '';
+      gaugeEl.appendChild(buildGauge(result.score, tier.bg));
+
+      // Verdict + wordcount
+      document.getElementById('result-verdict').textContent = result.verdict;
+      document.getElementById('result-wordcount').textContent = `${result.wordCount} words analyzed`;
+
+      // Signals
+      const signalsEl = document.getElementById('result-signals');
+      signalsEl.innerHTML = '';
+
+      if (result.signals.length > 0) {
+        const label = document.createElement('div');
+        label.className = 'result-signals-label';
+        label.textContent = 'Signals Detected';
+        signalsEl.appendChild(label);
+
+        for (const sig of result.signals.slice(0, 6)) {
+          const signal = document.createElement('div');
+          signal.className = 'result-signal';
+
+          const header = document.createElement('div');
+          header.className = 'result-signal-header';
+          const name = document.createElement('span');
+          name.className = 'result-signal-name';
+          name.textContent = sig.name;
+          const weight = document.createElement('span');
+          weight.className = 'result-signal-weight';
+          weight.textContent = `+${sig.weight}`;
+          header.appendChild(name);
+          header.appendChild(weight);
+          signal.appendChild(header);
+
+          const bar = document.createElement('div');
+          bar.className = 'result-signal-bar';
+          const fill = document.createElement('div');
+          fill.className = 'result-signal-fill';
+          fill.style.background = tier.bg;
+          bar.appendChild(fill);
+          signal.appendChild(bar);
+
+          signalsEl.appendChild(signal);
+
+          // Animate bar fill
+          requestAnimationFrame(() => {
+            fill.style.width = `${Math.min(sig.weight * 4, 100)}%`;
+          });
+
+          if (sig.phrases && sig.phrases.length > 0) {
+            const phrases = document.createElement('div');
+            phrases.className = 'result-signal-phrases';
+            phrases.textContent = `"${sig.phrases.slice(0, 3).join('", "')}"`;
+            signalsEl.appendChild(phrases);
+          }
+        }
+      } else {
+        const none = document.createElement('div');
+        none.className = 'result-none';
+        none.textContent = 'No significant AI signals detected.';
+        signalsEl.appendChild(none);
+      }
+    }
+
+    btnEl.addEventListener('click', runAnalysis);
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        runAnalysis();
+      }
+    });
+  </script>
+</body>
+</html>
